@@ -31,6 +31,7 @@
                             <th class="border p-2">Email</th>
                             <th class="border p-2">Status</th>
                             <th class="border p-2">Salary</th>
+                            <th class="border p-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +44,12 @@
                                 <td class="border p-2">{{ $employee->user->email ?? 'No Email' }}</td>
                                 <td class="border p-2">{{ $employee->status }}</td>
                                 <td class="border p-2">{{ $employee->basic_salary }}</td>
+                                <td class="border p-2">
+                                    <a href="{{ route('employees.edit', $employee->employee_id) }}"
+                                       class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        Edit
+                                    </a>
+                                </td>
                             </tr>
                         @empty
                             <tr>

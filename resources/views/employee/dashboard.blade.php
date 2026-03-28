@@ -7,8 +7,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                Welcome, {{ auth()->user()->name }}! You are logged in as Employee.
+            <div class="bg-white p-6 shadow rounded-lg">
+                Welcome {{ auth()->user()->name }} 👋
+
+                <div class="mt-4">
+                    <p>Your role: {{ auth()->user()->role }}</p>
+                </div>
             </div>
         </div>
     </div>

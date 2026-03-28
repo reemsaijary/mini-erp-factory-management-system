@@ -45,10 +45,18 @@
                                 <td class="border p-2">{{ $employee->status }}</td>
                                 <td class="border p-2">{{ $employee->basic_salary }}</td>
                                 <td class="border p-2">
-                                    <a href="{{ route('employees.edit', $employee->employee_id) }}"
-                                       class="bg-blue-500 text-white px-3 py-1 rounded">
-                                        Edit
-                                    </a>
+                                    <div class="flex gap-2">
+                                     <a href="{{ route('employees.edit', $employee->employee_id) }}"
+                                             class="bg-blue-500 text-white px-3 py-1 rounded">  Edit  </a>
+                                     <form action="{{ route('employees.destroy', $employee->employee_id) }}" method="POST"
+                                         onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                         @csrf
+                                       @method('DELETE')
+                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+                                     Delete
+                                     </button>
+                                     </form>
+                                      </div>
                                 </td>
                             </tr>
                         @empty

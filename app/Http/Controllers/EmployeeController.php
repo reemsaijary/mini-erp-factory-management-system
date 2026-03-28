@@ -111,4 +111,20 @@ public function update(Request $request, Employee $employee)
     return redirect()->route('employees.index')
         ->with('success', 'Employee updated successfully.');
 }
+    // delete an employee
+    public function destroy(Employee $employee)
+{
+    //delete operations are treated as one safe unit
+    //If something fails-->rollback
+    DB::transaction(function () use ($employee) {
+        if ($employee->user) {
+            $employee->user->delete(); //delete the login account first
+        }
+
+        $employee->delete();//then delete employee record
+    });
+
+    return redirect()->route('employees.index')
+        ->with('success', 'Employee deleted successfully.');
+}
 }

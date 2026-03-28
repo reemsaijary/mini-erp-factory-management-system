@@ -11,13 +11,38 @@ use Illuminate\Support\Facades\Hash;//used for hasg passwords
 class EmployeeController extends Controller
 {
     //show employees when user visits /employees
-    public function index()
-    {
-        //load related user automatically and fetch all records
-        $employees = Employee::with('user')->get();
-    //send data to blade view
-        return view('admin.employees.index', compact('employees'));
+   public function index(Request $request)//$request contains search input, role filter, status filter
+{
+    $query = Employee::with('user');// get employee and related user 
+
+    if ($request->filled('search')) {//check if  the user type something in the search box
+
+        $search = $request->search;//This stores the search text in a variable
+
+        //$q is a temporary query builder used only inside this block
+        //use($seacrh) --> make the $search variable available inside this function
+        $query->where(function ($q) use ($search) {
+            //find employees where first name contains the search text OR last name contains the search text
+            $q->where('first_name', 'like', '%' . $search . '%')
+              ->orWhere('last_name', 'like', '%' . $search . '%');
+        });
     }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    if ($request->filled('role')) {
+        $query->whereHas('user', function ($q) use ($request) {
+            $q->where('role', $request->role);
+        });
+    }
+    //paginate(5) Show only 5 employees per page
+    //appends($request->query())-->Keeps the search/filter values while moving between pages
+$employees = $query->orderBy('employee_id', 'asc')->paginate(5)->appends($request->query());
+    return view('admin.employees.index', compact('employees'));
+}
+
     //called when visting /employees/create
     public function create()
     {

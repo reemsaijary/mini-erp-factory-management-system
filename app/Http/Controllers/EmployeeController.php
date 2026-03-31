@@ -39,7 +39,7 @@ class EmployeeController extends Controller
     }
     //paginate(5) Show only 5 employees per page
     //appends($request->query())-->Keeps the search/filter values while moving between pages
-$employees = $query->orderBy('employee_id', 'asc')->paginate(5)->appends($request->query());
+$employees = $query->orderBy('employee_id', 'asc')->paginate(8)->appends($request->query());
     return view('admin.employees.index', compact('employees'));
 }
 

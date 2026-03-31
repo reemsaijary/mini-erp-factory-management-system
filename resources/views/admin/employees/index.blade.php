@@ -1,16 +1,7 @@
 <x-layouts.admin>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-                    Employees Management
-                </h2>
-                <p class="text-sm text-gray-500 mt-1">
-                    Manage employee records, accounts, and statuses
-                </p>
-            </div>
-        </div>
-    </x-slot>
+    @php
+        $pageTitle = 'Employees';
+    @endphp
 
     <div class="py-8 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

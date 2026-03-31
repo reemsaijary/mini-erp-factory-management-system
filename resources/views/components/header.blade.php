@@ -3,7 +3,10 @@
         <button id="sidebarToggle" class="text-white text-xl font-bold">
             ☰
         </button>
-        <h1 class="font-semibold text-lg">Dashboard</h1>
+
+        <h1 class="font-semibold text-lg">
+            {{ $pageTitle ?? 'Dashboard' }}
+        </h1>
     </div>
 
     <div class="hidden md:block w-1/3">

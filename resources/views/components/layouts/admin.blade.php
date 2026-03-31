@@ -5,23 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP System</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100">
 
+    <style>
+        .collapsed .sidebar-item {
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 overflow-x-hidden">
+
+    {{-- Top header --}}
     @include('components.header')
 
     <div class="flex">
+        {{-- Sidebar --}}
         @include('components.sidebar')
 
+        {{-- Main page content --}}
         <main class="flex-1 p-6 transition-all duration-300">
             {{ $slot }}
-        </main>
-    </div>
 
+    @include('components.footer')
+        </main> 
+    </div>
+    
     <script>
         const toggleBtn = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
-        const sidebarTitle = document.getElementById('sidebarTitle');
+        const title = document.getElementById('sidebarTitle');
 
         let collapsed = false;
 
@@ -31,14 +42,26 @@
             if (collapsed) {
                 sidebar.classList.remove('w-64');
                 sidebar.classList.add('w-20');
-                sidebarTitle.classList.add('hidden');
+                sidebar.classList.add('collapsed');
+
+                title.classList.add('hidden');
+
+                document.querySelectorAll('.label').forEach(el => {
+                    el.classList.add('hidden');
+                });
             } else {
                 sidebar.classList.remove('w-20');
                 sidebar.classList.add('w-64');
-                sidebarTitle.classList.remove('hidden');
+                sidebar.classList.remove('collapsed');
+
+                title.classList.remove('hidden');
+
+                document.querySelectorAll('.label').forEach(el => {
+                    el.classList.remove('hidden');
+                });
             }
         });
     </script>
-
+    
 </body>
 </html>

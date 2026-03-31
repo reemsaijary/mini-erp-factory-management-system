@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AttendanceController;
 
 
 Route::get('/', function () {
@@ -20,6 +21,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employee/dashboard', [DashboardController::class, 'employeeDashboard'])
         ->middleware('role:employee')
         ->name('employee.dashboard');
+
+    Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
-
+use App\Http\Controllers\PayrollController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,7 +23,12 @@ Route::middleware(['auth'])->group(function () {
         ->name('employee.dashboard');
 
     Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->middleware('role:admin')
     ->name('attendance.index');
+
+    Route::get('/payroll', [PayrollController::class, 'index'])
+    ->middleware('role:admin')
+    ->name('payroll.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

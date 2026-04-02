@@ -31,7 +31,7 @@
              <span>🏭</span>
            <span class="label">Machines</span>
         </a>
-        
+
         <a href="{{ route('employees.index') }}"
            class="flex items-center gap-3 px-3 py-2 rounded sidebar-item transition-all duration-200
            {{ request()->routeIs('employees.*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
@@ -45,7 +45,7 @@
             <span class="label">Attendance</span>
         </a>
         
-        <a href="#"
+        <a href="{{ route('maintenance.index') }}"
            class="flex items-center gap-3 px-3 py-2 rounded sidebar-item hover:bg-gray-700 transition-all duration-200">
             <span>🛠</span>
             <span class="label">Maintenance</span>

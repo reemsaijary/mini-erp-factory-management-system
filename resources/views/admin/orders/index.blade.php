@@ -1,6 +1,6 @@
 <x-layouts.admin>
     @php
-        $pageTitle = 'Maintenance';
+        $pageTitle = 'Orders';
     @endphp
 
     <div class="py-8 bg-gray-50 min-h-screen">
@@ -12,67 +12,84 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                    <p class="text-sm text-gray-500">Total Maintenance Records</p>
-                    <h3 class="text-2xl font-bold text-gray-800 mt-2">{{ $maintenanceRecords->total() }}</h3>
+                    <p class="text-sm text-gray-500">Total Orders</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-2">{{ $orders->total() }}</h3>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                     <p class="text-sm text-gray-500">Active Filters</p>
                     <h3 class="text-lg font-semibold text-gray-800 mt-2">
-                        {{ request('search') || request('status') || request('report_date') ? 'Applied' : 'None' }}
+                        {{ request('search') || request('order_status') || request('priority') || request('order_date') ? 'Applied' : 'None' }}
+                    </h3>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <p class="text-sm text-gray-500">New Orders</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-2">
+                        {{ $orders->where('order_status', 'new')->count() }}
                     </h3>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500">Maintenance Module</p>
+                        <p class="text-sm text-gray-500">Orders Module</p>
                         <h3 class="text-lg font-semibold text-gray-800 mt-2">Admin Control</h3>
                     </div>
 
-                    <a href="{{ route('maintenance.create') }}"
+                    <a href="{{ route('orders.create') }}"
                        class="inline-flex items-center rounded-xl bg-green-600 px-4 py-2 text-white font-medium shadow hover:bg-green-700 transition">
-                        + Add Record
+                        + Add Order
                     </a>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-5 border-b border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-800">Maintenance Records</h3>
-                    <p class="text-sm text-gray-500">Manage machine faults and maintenance progress</p>
+                    <h3 class="text-lg font-bold text-gray-800">Orders List</h3>
+                    <p class="text-sm text-gray-500">Manage order requests and track status</p>
                 </div>
 
                 <div class="px-6 py-5 border-b border-gray-100 bg-gray-50">
-                    <form method="GET" action="{{ route('maintenance.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <form method="GET" action="{{ route('orders.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1">Search</label>
                             <input
                                 type="text"
                                 name="search"
                                 value="{{ request('search') }}"
-                                placeholder="Machine, employee.."
+                                placeholder="Product or employee"
                                 class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             >
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                            <select name="status" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <select name="order_status" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">All Status</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                                <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>Resolved</option>
+                                <option value="new" {{ request('order_status') == 'new' ? 'selected' : '' }}>New</option>
+                                <option value="pending" {{ request('order_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="confirmed" {{ request('order_status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                             </select>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Report Date</label>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Priority</label>
+                            <select name="priority" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">All Priority</option>
+                                <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>High</option>
+                                <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>Low</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Order Date</label>
                             <input
                                 type="date"
-                                name="report_date"
-                                value="{{ request('report_date') }}"
+                                name="order_date"
+                                value="{{ request('order_date') }}"
                                 class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             >
                         </div>
@@ -83,7 +100,7 @@
                                 Filter
                             </button>
 
-                            <a href="{{ route('maintenance.index') }}"
+                            <a href="{{ route('orders.index') }}"
                                class="rounded-xl bg-gray-500 px-4 py-2 text-white font-medium hover:bg-gray-600 transition">
                                 Reset
                             </a>
@@ -96,64 +113,86 @@
                         <thead class="bg-gray-100 text-gray-700">
                             <tr>
                                 <th class="px-4 py-3 text-left font-semibold">ID</th>
-                                <th class="px-4 py-3 text-left font-semibold">Machine</th>
-                                <th class="px-4 py-3 text-left font-semibold">Reported By</th>
-                                <th class="px-4 py-3 text-left font-semibold">Description</th>
-                                <th class="px-4 py-3 text-left font-semibold">Report Date</th>
+                                <th class="px-4 py-3 text-left font-semibold">Product</th>
+                                <th class="px-4 py-3 text-left font-semibold">Created By</th>
+                                <th class="px-4 py-3 text-left font-semibold">Quantity</th>
+                                <th class="px-4 py-3 text-left font-semibold">Order Date</th>
+                                <th class="px-4 py-3 text-left font-semibold">Due Date</th>
+                                <th class="px-4 py-3 text-left font-semibold">Priority</th>
                                 <th class="px-4 py-3 text-left font-semibold">Status</th>
                                 <th class="px-4 py-3 text-left font-semibold">Actions</th>
                             </tr>
                         </thead>
 
                         <tbody class="divide-y divide-gray-100">
-                            @forelse($maintenanceRecords as $record)
+                            @forelse($orders as $order)
                                 <tr class="hover:bg-gray-50 transition">
                                     <td class="px-4 py-4 font-medium text-gray-700">
-                                        #{{ $record->maintenance_id}}
+                                        #{{ $order->order_id }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-800 font-semibold">
-                                        {{ $record->machine->machine_name ?? '-' }}
+                                        {{ $order->product->product_name ?? '-' }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
-                                        {{ $record->employee->first_name ?? '' }} {{ $record->employee->last_name ?? '' }}
+                                        {{ $order->employee->first_name ?? '' }} {{ $order->employee->last_name ?? '' }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
-                                        {{ $record->description }}
+                                        {{ $order->quantity }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
-                                        {{ $record->report_date }}
+                                        {{ $order->order_date }}
+                                    </td>
+
+                                    <td class="px-4 py-4 text-gray-700">
+                                        {{ $order->due_date }}
                                     </td>
 
                                     <td class="px-4 py-4">
-                                        @if($record->status === 'pending')
-                                            <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
-                                                Pending
+                                        @if($order->priority === 'high')
+                                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                                High
                                             </span>
-                                        @elseif($record->status === 'in_progress')
-                                            <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                                In Progress
+                                        @elseif($order->priority === 'medium')
+                                            <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                                                Medium
                                             </span>
                                         @else
                                             <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                                Resolved
+                                                Low
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        @if($order->order_status === 'new')
+                                            <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                                New
+                                            </span>
+                                        @elseif($order->order_status === 'pending')
+                                            <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                                                Pending
+                                            </span>
+                                        @else
+                                            <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                                Confirmed
                                             </span>
                                         @endif
                                     </td>
 
                                     <td class="px-4 py-4">
                                         <div class="flex flex-wrap gap-2">
-                                            <a href="{{ route('maintenance.edit', $record->maintenance_id) }}"
+                                            <a href="{{ route('orders.edit', $order->order_id) }}"
                                                class="rounded-lg bg-blue-600 px-3 py-2 text-white text-xs font-medium hover:bg-blue-700 transition">
                                                 Edit
                                             </a>
 
-                                            <form action="{{ route('maintenance.destroy', $record->maintenance_id) }}"
+                                            <form action="{{ route('orders.destroy', $order->order_id) }}"
                                                   method="POST"
-                                                  onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                                  onsubmit="return confirm('Are you sure you want to delete this order?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
@@ -166,8 +205,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                        No maintenance records found.
+                                    <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                                        No orders found.
                                     </td>
                                 </tr>
                             @endforelse
@@ -176,7 +215,7 @@
                 </div>
 
                 <div class="px-6 py-4 border-t border-gray-100 bg-white">
-                    {{ $maintenanceRecords->links() }}
+                    {{ $orders->links() }}
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@
             <span class="label">Dashboard</span>
         </a>
 
-        <a href="#"
+        <a href="{{route('orders.index')}}"
            class="flex items-center gap-3 px-3 py-2 rounded sidebar-item hover:bg-gray-700 transition-all duration-200">
             <span>📦</span>
             <span class="label">Orders</span>

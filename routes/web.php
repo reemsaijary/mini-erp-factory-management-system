@@ -8,6 +8,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MachineMaintenanceController;
+use App\Http\Controllers\OrderController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -92,6 +94,27 @@ Route::middleware(['auth'])->group(function () {
     ->name('maintenance.update');
     Route::delete('/maintenance/{maintenance}', [MachineMaintenanceController::class, 'destroy'])
     ->middleware('role:admin')->name('maintenance.destroy');
+
+    // orders
+    Route::get('/orders', [OrderController::class, 'index'])
+    ->middleware('role:admin')
+    ->name('orders.index');
+    Route::get('/orders/create', [OrderController::class, 'create'])
+    ->middleware('role:admin')
+    ->name('orders.create');
+    Route::post('/orders', [OrderController::class, 'store'])
+    ->middleware('role:admin')
+    ->name('orders.store');
+    Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])
+    ->middleware('role:admin')
+    ->name('orders.edit');
+    Route::put('/orders/{order}', [OrderController::class, 'update'])
+    ->middleware('role:admin')
+    ->name('orders.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])
+    ->middleware('role:admin')
+    ->name('orders.destroy');
+
     });
 
 

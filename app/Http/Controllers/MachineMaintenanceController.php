@@ -43,37 +43,42 @@ class MachineMaintenanceController extends Controller
         return view('admin.maintenance.index', compact('maintenanceRecords'));
     }
     //opens form page
-    public function create()
-    {
-        //Get data for dropdowns
-        $machines = Machine::orderBy('machine_name')->get();
-        $employees = Employee::orderBy('first_name')->get();
+ public function create(Request $request)
+{
+    $machines = Machine::orderBy('machine_name')->get();
+    $employees = Employee::orderBy('first_name')->get();
+    $selectedMachineId = $request->machine_id;
 
-        return view('admin.maintenance.create', compact('machines', 'employees'));
-    }
+    return view('admin.maintenance.create', compact('machines', 'employees', 'selectedMachineId'));
+}
     //save new records, handles form submission
     public function store(Request $request)
-    {
-        //check input before saving
-        $request->validate([
-            'machine_id'   => 'required|exists:machines,machine_id',
-            'reported_by'  => 'required|exists:employees,employee_id',
-            'description'  => 'required|string',
-            'report_date'  => 'required|date',
-            'status'       => 'required|in:pending,in_progress,resolved',
-        ]);
-    //Insert into database
-        MachineMaintenance::create([
-            'machine_id'  => $request->machine_id,
-            'reported_by' => $request->reported_by,
-            'description' => $request->description,
-            'report_date' => $request->report_date,
-            'status'      => $request->status,
-        ]);
+{
+    $request->validate([
+        'machine_id'   => 'required|exists:machines,machine_id',
+        'reported_by'  => 'required|exists:employees,employee_id',
+        'description'  => 'required|string',
+        'report_date'  => 'required|date',
+        'status'       => 'required|in:pending,in_progress,resolved',
+    ]);
 
-        return redirect()->route('maintenance.index')
-            ->with('success', 'Maintenance record created successfully.');
-    }
+    MachineMaintenance::create([
+        'machine_id'  => $request->machine_id,
+        'reported_by' => $request->reported_by,
+        'description' => $request->description,
+        'report_date' => $request->report_date,
+        'status'      => $request->status,
+    ]);
+
+    // Update machine status automatically
+    $machine = Machine::findOrFail($request->machine_id);
+    $machine->update([
+        'machine_status' => $request->status === 'resolved' ? 'working' : 'under_maintenance',
+    ]);
+
+    return redirect()->route('maintenance.index')
+        ->with('success', 'Maintenance record created successfully.');
+}
     //Receives ID from URL
    public function edit($id)
     {
@@ -84,7 +89,7 @@ class MachineMaintenanceController extends Controller
     return view('admin.maintenance.edit', compact('maintenance', 'machines', 'employees'));
 }
     //handles edit form
-    public function update(Request $request, $id)
+ public function update(Request $request, $id)
 {
     $request->validate([
         'machine_id'   => 'required|exists:machines,machine_id',
@@ -96,12 +101,31 @@ class MachineMaintenanceController extends Controller
 
     $maintenance = MachineMaintenance::findOrFail($id);
 
+    // Save old machine before update
+    $oldMachineId = $maintenance->machine_id;
+
     $maintenance->update([
         'machine_id'  => $request->machine_id,
         'reported_by' => $request->reported_by,
         'description' => $request->description,
         'report_date' => $request->report_date,
         'status'      => $request->status,
+    ]);
+
+    // If machine changed, restore old machine status to working
+    if ($oldMachineId != $request->machine_id) {
+        $oldMachine = Machine::find($oldMachineId);
+        if ($oldMachine) {
+            $oldMachine->update([
+                'machine_status' => 'working',
+            ]);
+        }
+    }
+
+    // Update selected machine status
+    $machine = Machine::findOrFail($request->machine_id);
+    $machine->update([
+        'machine_status' => $request->status === 'resolved' ? 'working' : 'under_maintenance',
     ]);
 
     return redirect()->route('maintenance.index')

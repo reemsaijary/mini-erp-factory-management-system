@@ -29,13 +29,14 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Machine</label>
                                 <select name="machine_id" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                                    <option value="">Select Machine</option>
-                                    @foreach($machines as $machine)
-                                        <option value="{{ $machine->machine_id }}" {{ old('machine_id') == $machine->machine_id ? 'selected' : '' }}>
-                                            {{ $machine->machine_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <option value="">Select Machine</option>
+                                @foreach($machines as $machine)
+                                    <option value="{{ $machine->machine_id }}"
+                                        {{ old('machine_id', $selectedMachineId ?? '') == $machine->machine_id ? 'selected' : '' }}>
+                                        {{ $machine->machine_name }}
+                                    </option>
+                                @endforeach
+                            </select>
                             </div>
 
                             <div>

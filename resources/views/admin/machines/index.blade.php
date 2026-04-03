@@ -118,6 +118,25 @@
                                     </td>
                                     <td class="px-4 py-4">
                                         <div class="flex flex-wrap gap-2">
+                                            @if($machine->machine_status === 'working')
+                                                <a href="{{ route('maintenance.create', ['machine_id' => $machine->machine_id]) }}"
+                                                class="rounded-lg bg-yellow-500 px-3 py-2 text-white text-xs font-medium hover:bg-yellow-600 transition">
+                                                    Assign to Maintenance
+                                                </a>
+
+                                            @elseif($machine->machine_status === 'under_maintenance')
+                                                <button type="button"
+                                                        class="rounded-lg bg-gray-400 px-3 py-2 text-white text-xs font-medium cursor-not-allowed">
+                                                    Under Maintenance
+                                                </button>
+
+                                            @else
+                                                <button type="button"
+                                                        class="rounded-lg bg-gray-400 px-3 py-2 text-white text-xs font-medium"
+                                                        onclick="alert('Inactive machines cannot be assigned to maintenance.')">
+                                                    Assign to Maintenance
+                                                </button>
+                                            @endif
                                             <a href="{{ route('machines.edit', $machine->machine_id) }}"
                                                class="rounded-lg bg-blue-600 px-3 py-2 text-white text-xs font-medium hover:bg-blue-700 transition">
                                                 Edit

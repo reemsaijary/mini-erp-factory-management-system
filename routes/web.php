@@ -11,6 +11,8 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MachineMaintenanceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductionController;
+use App\Http\Controllers\ProductController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
         //  PRODUCTION 
         Route::resource('production', ProductionController::class);
         
+        // PRODUCTS
+        Route::resource('products', ProductController::class);
+
+
     });//middleware('role:admin')
 
 });//middleware(['auth'])

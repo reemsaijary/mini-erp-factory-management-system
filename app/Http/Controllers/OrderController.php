@@ -12,7 +12,8 @@ class OrderController extends Controller
     //show orders
     public function index(Request $request)
     {
-        $query = Order::with(['product', 'employee']);
+        $query = Order::with(['product', 'employee', 'productions'])
+              ->orderBy('order_id', 'desc');
     //search
         if ($request->filled('search')) {
             $search = $request->search;

@@ -13,7 +13,8 @@ class ProductionController extends Controller
     //show productions list
     public function index(Request $request)
     {
-        $query = Production::with(['order', 'machine', 'employee']);
+        $query = Production::with(['order', 'machine', 'employee'])
+                   ->orderBy('production_id', 'desc');
 
         if ($request->filled('status')) {
             $query->where('production_status', $request->status);
@@ -24,13 +25,23 @@ class ProductionController extends Controller
         return view('admin.production.index', compact('productions'));
     }
     //create order to production
-    public function create()
+public function create(Request $request)
 {
-    $orders = Order::with('product')->orderBy('order_id', 'desc')->get();
-    $machines = Machine::orderBy('machine_name')->get();
-    $employees = Employee::orderBy('first_name')->get();
+    $orders = Order::whereDoesntHave('productions')
+                   ->with('product')
+                   ->get();
 
-    return view('admin.production.create', compact('orders', 'machines', 'employees'));
+    $machines = Machine::all();
+    $employees = Employee::all();
+
+    $selectedOrderId = $request->order_id;
+
+    return view('admin.production.create', compact(
+        'orders',
+        'machines',
+        'employees',
+        'selectedOrderId'
+    ));
 }
     //save records
    public function store(Request $request)

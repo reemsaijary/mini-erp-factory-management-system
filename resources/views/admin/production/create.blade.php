@@ -28,7 +28,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                           <div class="md:col-span-2">
+                          <div class="md:col-span-2">
     <label class="block text-sm font-medium text-gray-600 mb-1">Order</label>
 
     <select name="order_id" id="orderSelect"
@@ -42,7 +42,7 @@
                 data-due-date="{{ $o->due_date }}"
                 data-product-name="{{ $o->product->product_name ?? 'Unknown Product' }}"
                 data-quantity="{{ $o->quantity }}"
-                {{ old('order_id') == $o->order_id ? 'selected' : '' }}
+                {{ old('order_id', $selectedOrderId ?? '') == $o->order_id ? 'selected' : '' }}
             >
                 Order #{{ $o->order_id }} - {{ $o->product->product_name ?? 'Unknown Product' }} (Qty: {{ $o->quantity }})
             </option>

@@ -12,7 +12,7 @@ use App\Http\Controllers\MachineMaintenanceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProductController;
-
+use App\Http\Controllers\SettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
         // PRODUCTS
         Route::resource('products', ProductController::class);
 
+        //SETTINGS
+        Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     });//middleware('role:admin')
 

@@ -21,10 +21,25 @@ class DashboardController extends Controller
     }
 //This function runs when user goes to /admin/dashboard
 
-    public function adminDashboard()
-    {
-        return view('admin.dashboard');
-    }
+       public function adminDashboard()
+{
+    $totalEmployees = \App\Models\Employee::count();
+    $totalOrders = \App\Models\Order::count();
+    $totalProducts = \App\Models\Product::count();
+    $totalMachines = \App\Models\Machine::count();
+    $totalProduction = \App\Models\Production::count();
+    $totalMaintenance = \App\Models\MachineMaintenance::count();
+
+    return view('admin.dashboard', compact(
+        'totalEmployees',
+        'totalOrders',
+        'totalProducts',
+        'totalMachines',
+        'totalProduction',
+        'totalMaintenance'
+    ));
+}
+    
 //Runs when user goes to /employee/dashboard
 
     public function employeeDashboard()

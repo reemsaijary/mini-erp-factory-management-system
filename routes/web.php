@@ -13,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,6 +62,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
+        // REPORTS
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     });//middleware('role:admin')
 
 });//middleware(['auth'])

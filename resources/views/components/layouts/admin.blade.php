@@ -13,23 +13,23 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 overflow-x-hidden">
+<body class="bg-[#eef4fb] overflow-x-hidden text-slate-800">
 
     {{-- Top header --}}
     @include('components.header')
 
-    <div class="flex">
+    <div class="flex min-h-[calc(100vh-80px)]">
         {{-- Sidebar --}}
         @include('components.sidebar')
 
         {{-- Main page content --}}
-        <main class="flex-1 p-6 transition-all duration-300">
+        <main class="flex-1 p-6 md:p-8 transition-all duration-300 bg-[#eef4fb]">
             {{ $slot }}
 
-    @include('components.footer')
-        </main> 
+            @include('components.footer')
+        </main>
     </div>
-    
+
     <script>
         const toggleBtn = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
@@ -63,6 +63,6 @@
             }
         });
     </script>
-    
+
 </body>
 </html>

@@ -40,10 +40,4 @@ class DashboardController extends Controller
     ));
 }
     
-//Runs when user goes to /employee/dashboard
-
-    public function employeeDashboard()
-    {
-        return view('employee.dashboard');
-    }
 }

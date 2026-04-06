@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
      // employee only pages
     Route::middleware('role:employee')->group(function () {
         Route::get('/employee/check', [EmployeeDashboardController::class, 'check'])->name('employee.check');
+        Route::post('/employee/check-in', [EmployeeDashboardController::class, 'checkIn'])->name('employee.checkin');
+        Route::post('/employee/check-out', [EmployeeDashboardController::class, 'checkOut'])->name('employee.checkout');
         Route::get('/employee/attendance', [EmployeeDashboardController::class, 'attendance'])->name('employee.attendance');
         Route::get('/employee/profile', [EmployeeDashboardController::class, 'profile'])->name('employee.profile');
     });//middleware('role:employee')

@@ -4,17 +4,90 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Attendance;
+use Carbon\Carbon; //date & time library
 
 class EmployeeDashboardController extends Controller
 {
+    //When user goes to /employee/dashboard, Laravel loads: employee/dashboard.blade.php
     public function employeeDashboard()
     {
         return view('employee.dashboard');
     }
-
+    //prepares data for the check page
     public function check()
     {
-        return view('employee.check');
+        $employeeId = auth()->user()->employee_id;//get logged-in user
+        //get today’s attendance
+        $todayAttendance = Attendance::where('employee_id', $employeeId)
+            ->where('attendance_date', Carbon::today()->toDateString())
+            ->first();
+
+        $totalHours = null;
+      //if record exists,and check_in exists, and check_out exists
+        if ($todayAttendance && $todayAttendance->check_in && $todayAttendance->check_out) {
+           //convert time because DB stores time as string -->
+           //We convert it into Carbon objects to do calculations.
+            $checkIn = Carbon::parse($todayAttendance->check_in);
+            $checkOut = Carbon::parse($todayAttendance->check_out);
+        //calculate difference
+            $totalMinutes = $checkIn->diffInMinutes($checkOut);
+            $hours = floor($totalMinutes / 60);
+            $minutes = $totalMinutes % 60;
+
+            $totalHours = $hours . 'h ' . $minutes . 'm';
+        }
+        //send data to view
+        return view('employee.check', [
+            'todayAttendance' => $todayAttendance,
+            'currentDate' => Carbon::today()->format('d F Y'),
+            'totalHours' => $totalHours,
+        ]);
+    }
+    //runs when user clicks Check In button
+    public function checkIn()
+    {
+        $employeeId = auth()->user()->employee_id;//get employee
+        //check if already checked in
+        $todayAttendance = Attendance::where('employee_id', $employeeId)
+            ->where('attendance_date', Carbon::today()->toDateString())
+            ->first();
+        //: prevent duplicate
+        if ($todayAttendance) {
+            return back()->with('error', 'You have already checked in today.');
+        }
+       //create new attendance
+        Attendance::create([
+            'employee_id' => $employeeId,
+            'attendance_date' => Carbon::today()->toDateString(),
+            'check_in' => Carbon::now()->format('H:i:s'),
+            'status' => 'present',
+        ]);
+
+        return back()->with('success', 'Checked in successfully.');
+    }
+    //runs when user clicks Check Out
+    public function checkOut()
+    {
+        $employeeId = auth()->user()->employee_id;
+        //get attendance
+        $todayAttendance = Attendance::where('employee_id', $employeeId)
+            ->where('attendance_date', Carbon::today()->toDateString())
+            ->first();
+        //must check in first
+        if (!$todayAttendance) {
+            return back()->with('error', 'You must check in first.');
+        }
+        //prevent double checkout
+        if ($todayAttendance->check_out) {
+            return back()->with('error', 'You have already checked out today.');
+        }
+        //update record
+        $todayAttendance->update([
+            'check_out' => Carbon::now()->format('H:i:s'),
+        ]);
+
+        return back()->with('success', 'Checked out successfully.');
     }
 
     public function attendance()

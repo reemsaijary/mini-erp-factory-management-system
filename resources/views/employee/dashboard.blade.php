@@ -1,19 +1,11 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Employee Dashboard
-        </h2>
-    </x-slot>
+<x-layouts.employee>
+    <h1 class="text-2xl font-bold">Employee Dashboard</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white p-6 shadow rounded-lg">
-                Welcome {{ auth()->user()->name }} 👋
+    <div class="mt-6 bg-white p-6 rounded-lg shadow">
+        <p>Welcome {{ auth()->user()->name }} 👋</p>
 
-                <div class="mt-4">
-                    <p>Your role: {{ auth()->user()->role }}</p>
-                </div>
-            </div>
+        <div class="mt-4">
+            <p>Your role: {{ auth()->user()->role }}</p>
         </div>
     </div>
-</x-app-layout>
+</x-layouts.employee>

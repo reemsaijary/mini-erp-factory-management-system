@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\MachineMaintenanceController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReportController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
-    Route::get('/employee/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
+    Route::get('/employee/dashboard', [EmployeeDashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
 
     //profile 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -65,6 +68,13 @@ Route::middleware(['auth'])->group(function () {
         // REPORTS
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     });//middleware('role:admin')
+
+     // employee only pages
+    Route::middleware('role:employee')->group(function () {
+        Route::get('/employee/check', [EmployeeDashboardController::class, 'check'])->name('employee.check');
+        Route::get('/employee/attendance', [EmployeeDashboardController::class, 'attendance'])->name('employee.attendance');
+        Route::get('/employee/profile', [EmployeeDashboardController::class, 'profile'])->name('employee.profile');
+    });//middleware('role:employee')
 
 });//middleware(['auth'])
 

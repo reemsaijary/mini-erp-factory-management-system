@@ -90,10 +90,40 @@ class EmployeeDashboardController extends Controller
         return back()->with('success', 'Checked out successfully.');
     }
 
-    public function attendance()
-    {
-        return view('employee.attendance');
+   public function attendance(Request $request)
+{
+    $employeeId = auth()->user()->employee_id;
+
+    $query = Attendance::where('employee_id', $employeeId);
+
+    // Search by date
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where('attendance_date', 'like', '%' . $search . '%');
     }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $status = $request->status;
+
+        if ($status === 'completed') {
+            $query->whereNotNull('check_in')->whereNotNull('check_out');
+        } elseif ($status === 'present') {
+            $query->whereNotNull('check_in')->whereNull('check_out');
+        } else {
+            $query->where('status', $status);
+        }
+    }
+
+    // Filter by specific date
+    if ($request->filled('date')) {
+        $query->whereDate('attendance_date', $request->date);
+    }
+
+    $attendanceRecords = $query->orderBy('attendance_date', 'desc')->get();
+
+    return view('employee.attendance', compact('attendanceRecords'));
+}
 
     public function profile()
     {

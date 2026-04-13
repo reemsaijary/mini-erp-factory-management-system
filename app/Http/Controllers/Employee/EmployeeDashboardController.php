@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use Carbon\Carbon; //date & time library
-
+use App\Models\Employee;
 class EmployeeDashboardController extends Controller
 {
     //When user goes to /employee/dashboard, Laravel loads: employee/dashboard.blade.php
@@ -145,7 +145,11 @@ class EmployeeDashboardController extends Controller
 }
 
     public function profile()
-    {
-        return view('employee.profile');
-    }
+{
+    $user = auth()->user();
+
+    $employee = Employee::where('employee_id', $user->employee_id)->first();
+
+    return view('employee.profile', compact('user', 'employee'));
+}
 }

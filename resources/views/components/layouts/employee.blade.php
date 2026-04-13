@@ -9,59 +9,63 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <style>
-    .collapsed .sidebar-item {
-        justify-content: center;
-    }
-</style>
+        .collapsed .sidebar-item {
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
 
     @include('components.header')
 
-    <div class="flex">
+    <div class="flex min-h-screen">
         @include('components.employee-sidebar')
 
-        <main class="flex-1 p-6">
-            {{ $slot }}
-        </main>
+        <div class="flex flex-col flex-1">
+            <main class="flex-1 p-6">
+                {{ $slot }}
+            </main>
+
+            @include('components.employee-footer')
+        </div>
     </div>
 
-    <!-- fo collapse to work -->
+    <!-- for collapse to work -->
     <script>
-    const toggleBtn = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
-    const title = document.getElementById('sidebarTitle');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const title = document.getElementById('sidebarTitle');
 
-    let collapsed = false;
+        let collapsed = false;
 
-    if (toggleBtn && sidebar && title) {
-        toggleBtn.addEventListener('click', function () {
-            collapsed = !collapsed;
+        if (toggleBtn && sidebar && title) {
+            toggleBtn.addEventListener('click', function () {
+                collapsed = !collapsed;
 
-            if (collapsed) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                sidebar.classList.add('collapsed');
+                if (collapsed) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-20');
+                    sidebar.classList.add('collapsed');
 
-                title.classList.add('hidden');
+                    title.classList.add('hidden');
 
-                document.querySelectorAll('.label').forEach(el => {
-                    el.classList.add('hidden');
-                });
-            } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                sidebar.classList.remove('collapsed');
+                    document.querySelectorAll('.label').forEach(el => {
+                        el.classList.add('hidden');
+                    });
+                } else {
+                    sidebar.classList.remove('w-20');
+                    sidebar.classList.add('w-64');
+                    sidebar.classList.remove('collapsed');
 
-                title.classList.remove('hidden');
+                    title.classList.remove('hidden');
 
-                document.querySelectorAll('.label').forEach(el => {
-                    el.classList.remove('hidden');
-                });
-            }
-        });
-    }
-</script>
+                    document.querySelectorAll('.label').forEach(el => {
+                        el.classList.remove('hidden');
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>

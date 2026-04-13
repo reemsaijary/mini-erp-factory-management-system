@@ -82,12 +82,13 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-blue-600 text-white">
-                        <tr>
-                            <th class="px-6 py-4 text-sm font-semibold">Date</th>
-                            <th class="px-6 py-4 text-sm font-semibold">Check In</th>
-                            <th class="px-6 py-4 text-sm font-semibold">Check Out</th>
-                            <th class="px-6 py-4 text-sm font-semibold">Status</th>
-                        </tr>
+                       <tr>
+                <th class="px-6 py-4 text-sm font-semibold">Date</th>
+                <th class="px-6 py-4 text-sm font-semibold">Check In</th>
+                <th class="px-6 py-4 text-sm font-semibold">Check Out</th>
+                <th class="px-6 py-4 text-sm font-semibold">Total Hours</th>
+                <th class="px-6 py-4 text-sm font-semibold">Status</th>
+            </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @foreach($attendanceRecords as $record)
@@ -104,6 +105,22 @@
                                     {{ $record->check_out ? \Carbon\Carbon::parse($record->check_out)->format('h:i A') : '-' }}
                                 </td>
 
+                                            <td class="px-6 py-4 text-sm text-gray-700">
+                @if($record->check_in && $record->check_out)
+                    @php
+                        $checkIn = \Carbon\Carbon::parse($record->check_in);
+                        $checkOut = \Carbon\Carbon::parse($record->check_out);
+
+                        $totalMinutes = $checkIn->diffInMinutes($checkOut);
+                        $hours = floor($totalMinutes / 60);
+                        $minutes = $totalMinutes % 60;
+                    @endphp
+
+                    {{ $hours }}h {{ $minutes }}m
+                @else
+                    -
+                @endif
+            </td>
                                 <td class="px-6 py-4 text-sm">
                                     @if($record->check_in && !$record->check_out)
 

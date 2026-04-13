@@ -4,11 +4,31 @@
         <h1 class="text-2xl font-bold text-slate-800">Employee Dashboard</h1>
     </div>
 
-    <!-- Welcome Card -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-        <h2 class="text-xl font-semibold text-slate-800">
-            Welcome {{ auth()->user()->name }} 
-        </h2>
+    <!-- Welcome + Date -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+
+        <!-- Welcome Card -->
+        <div class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-slate-800">
+                        Welcome {{ auth()->user()->name }} 
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today Date Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <p class="text-sm text-gray-500 mb-2">Today Date</p>
+            <h3 class="text-2xl font-bold text-slate-800">
+                {{ \Carbon\Carbon::today()->format('d M Y') }}
+            </h3>
+        </div>
     </div>
 
     <!-- Status Cards -->
@@ -16,13 +36,27 @@
 
         <!-- Today Status -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <p class="text-sm text-gray-500 mb-2">Today Status</p>
-            <h3 class="text-2xl font-bold
-                @if($todayStatus === 'Late') text-red-600
-                @elseif($todayStatus === 'Present') text-yellow-600
-                @elseif($todayStatus === 'Completed') text-green-600
-                @else text-gray-700
-                @endif">
+            <p class="text-sm text-gray-500 mb-3">Today Status</p>
+
+            @if($todayStatus === 'Late')
+                <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700 mb-3">
+                    Late
+                </span>
+            @elseif($todayStatus === 'Present')
+                <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700 mb-3">
+                    Present
+                </span>
+            @elseif($todayStatus === 'Completed')
+                <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700 mb-3">
+                    Completed
+                </span>
+            @else
+                <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 mb-3">
+                    Not Checked In Yet
+                </span>
+            @endif
+
+            <h3 class="text-xl font-bold text-slate-800">
                 {{ $todayStatus }}
             </h3>
         </div>

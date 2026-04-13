@@ -10,10 +10,52 @@ use App\Models\Employee;
 class EmployeeDashboardController extends Controller
 {
     //When user goes to /employee/dashboard, Laravel loads: employee/dashboard.blade.php
-    public function employeeDashboard()
-    {
-        return view('employee.dashboard');
+   public function employeeDashboard()
+{
+    $employeeId = auth()->user()->employee_id;
+
+    $todayAttendance = Attendance::where('employee_id', $employeeId)
+        ->where('attendance_date', Carbon::today()->toDateString())
+        ->first();
+
+    $todayStatus = 'Not Checked In Yet';
+    $checkInTime = null;
+    $checkOutTime = null;
+    $totalHours = null;
+
+    if ($todayAttendance) {
+        if ($todayAttendance->check_in) {
+            $checkInTime = Carbon::parse($todayAttendance->check_in)->format('h:i A');
+
+            if ($todayAttendance->status === 'late') {
+                $todayStatus = 'Late';
+            } else {
+                $todayStatus = 'Present';
+            }
+        }
+
+        if ($todayAttendance->check_out) {
+            $checkOutTime = Carbon::parse($todayAttendance->check_out)->format('h:i A');
+            $todayStatus = 'Completed';
+
+            $checkIn = Carbon::parse($todayAttendance->check_in);
+            $checkOut = Carbon::parse($todayAttendance->check_out);
+
+            $totalMinutes = $checkIn->diffInMinutes($checkOut);
+            $hours = floor($totalMinutes / 60);
+            $minutes = $totalMinutes % 60;
+
+            $totalHours = $hours . 'h ' . $minutes . 'm';
+        }
     }
+
+    return view('employee.dashboard', compact(
+        'todayStatus',
+        'checkInTime',
+        'checkOutTime',
+        'totalHours'
+    ));
+}
     //prepares data for the check page
     public function check()
     {

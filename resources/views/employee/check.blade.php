@@ -1,12 +1,11 @@
-<!-- use  employee layout (header + sidebar + design) -->
 <x-layouts.employee>
-    <!-- everything inside = page content -->
+
     <h1 class="text-2xl font-bold mb-6">Check In / Check Out</h1>
 
     <div class="bg-white p-6 rounded-lg shadow mb-6">
         <p class="text-lg font-medium">Current Date: {{ $currentDate }}</p>
     </div>
-    <!-- session() = temporary message passed from controller → view -->
+
     @if (session('success'))
         <div class="bg-green-100 text-green-700 px-4 py-3 rounded mb-4">
             {{ session('success') }}
@@ -20,7 +19,7 @@
     @endif
 
     <div class="bg-white p-8 rounded-lg shadow text-center">
-            <!-- Not checked in -> no record in DB for today -->
+
         @if (!$todayAttendance)
             <div class="mb-8">
                 <h2 class="text-3xl font-semibold text-gray-700">Not Checked In Yet</h2>
@@ -35,10 +34,16 @@
             </form>
 
         @elseif ($todayAttendance && $todayAttendance->check_in && !$todayAttendance->check_out)
-            <div class="mb-8">
+            <div class="mb-8 space-y-2">
                 <h2 class="text-3xl font-semibold text-gray-700">
                     Checked in at {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i A') }}
                 </h2>
+
+                @if($todayAttendance->status === 'late')
+                    <p class="text-red-600 font-medium text-lg">Status: Late</p>
+                @else
+                    <p class="text-yellow-600 font-medium text-lg">Status: Present</p>
+                @endif
             </div>
 
             <form method="POST" action="{{ route('employee.checkout') }}">

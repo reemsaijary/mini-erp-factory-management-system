@@ -16,7 +16,7 @@
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
-                        placeholder="e.g. 2026-04-06"
+                        placeholder="Search by date (YYYY-MM-DD)"
                         class="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                 </div>
@@ -69,8 +69,9 @@
 
     <!-- Attendance Table -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-slate-800">Attendance Records</h2>
+            <span class="text-sm text-gray-500">Total Records: {{ $attendanceRecords->count() }}</span>
         </div>
 
         @if($attendanceRecords->isEmpty())
@@ -104,22 +105,28 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-sm">
-                                    @if($record->status === 'late' && !$record->check_out)
-                                        <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-red-700 font-medium">
-                                            Late
-                                        </span>
-                                    @elseif($record->check_in && !$record->check_out)
-                                        <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 font-medium">
-                                            Present
-                                        </span>
+                                    @if($record->check_in && !$record->check_out)
+
+                                        @if($record->status === 'late')
+                                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-red-700 font-medium">
+                                                Late
+                                            </span>
+                                        @else
+                                            <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 font-medium">
+                                                Present
+                                            </span>
+                                        @endif
+
                                     @elseif($record->check_in && $record->check_out)
                                         <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-gray-700 font-medium">
                                             Completed
                                         </span>
+
                                     @elseif($record->status === 'absent')
                                         <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-red-700 font-medium">
                                             Absent
                                         </span>
+
                                     @else
                                         <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-green-700 font-medium">
                                             {{ ucfirst($record->status) }}

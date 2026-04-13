@@ -46,26 +46,38 @@ class EmployeeDashboardController extends Controller
     }
     //runs when user clicks Check In button
     public function checkIn()
-    {
-        $employeeId = auth()->user()->employee_id;//get employee
-        //check if already checked in
-        $todayAttendance = Attendance::where('employee_id', $employeeId)
-            ->where('attendance_date', Carbon::today()->toDateString())
-            ->first();
-        //: prevent duplicate
-        if ($todayAttendance) {
-            return back()->with('error', 'You have already checked in today.');
-        }
-       //create new attendance
-        Attendance::create([
-            'employee_id' => $employeeId,
-            'attendance_date' => Carbon::today()->toDateString(),
-            'check_in' => Carbon::now()->format('H:i:s'),
-            'status' => 'present',
-        ]);
+{
+    $employeeId = auth()->user()->employee_id;//get employee
 
-        return back()->with('success', 'Checked in successfully.');
+    //check if already checked in
+    $todayAttendance = Attendance::where('employee_id', $employeeId)
+        ->where('attendance_date', Carbon::today()->toDateString())
+        ->first();
+
+    //prevent duplicate
+    if ($todayAttendance) {
+        return back()->with('error', 'You have already checked in today.');
     }
+
+    //get current time
+    $now = Carbon::now();
+
+    //set late limit to 8:10 AM
+    $lateTime = Carbon::today()->setTime(8, 10, 0);
+
+    //decide status
+    $status = $now->gt($lateTime) ? 'late' : 'present';
+
+    //create new attendance
+    Attendance::create([
+        'employee_id' => $employeeId,
+        'attendance_date' => Carbon::today()->toDateString(),
+        'check_in' => $now->format('H:i:s'),
+        'status' => $status,
+    ]);
+
+    return back()->with('success', 'Checked in successfully.');
+}
     //runs when user clicks Check Out
     public function checkOut()
     {
@@ -107,9 +119,16 @@ class EmployeeDashboardController extends Controller
         $status = $request->status;
 
         if ($status === 'completed') {
-            $query->whereNotNull('check_in')->whereNotNull('check_out');
+            $query->whereNotNull('check_in')
+                  ->whereNotNull('check_out');
         } elseif ($status === 'present') {
-            $query->whereNotNull('check_in')->whereNull('check_out');
+            $query->where('status', 'present')
+                  ->whereNotNull('check_in')
+                  ->whereNull('check_out');
+        } elseif ($status === 'late') {
+            $query->where('status', 'late')
+                  ->whereNotNull('check_in')
+                  ->whereNull('check_out');
         } else {
             $query->where('status', $status);
         }

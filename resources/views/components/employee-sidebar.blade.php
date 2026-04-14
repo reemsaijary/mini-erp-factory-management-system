@@ -35,7 +35,13 @@
             <i class="fa-solid fa-right-to-bracket w-5 text-center"></i>
             <span class="label">Check In / Check Out</span>
         </a>
-
+    <!-- My Tasks -->
+        <a href="{{ route('employee.tasks') }}"
+   class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200
+   {{ request()->routeIs('employee.tasks') ? 'bg-white/20 text-white shadow' : 'hover:bg-white/10' }}">
+    <i class="fa-solid fa-list-check w-5 text-center"></i>
+    <span class="label">My Tasks</span>
+     </a>
         <!-- My Attendance -->
         <a href="{{ route('employee.attendance') }}"
            class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200

@@ -76,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/employee/check-out', [EmployeeDashboardController::class, 'checkOut'])->name('employee.checkout');
         Route::get('/employee/attendance', [EmployeeDashboardController::class, 'attendance'])->name('employee.attendance');
         Route::get('/employee/profile', [EmployeeDashboardController::class, 'profile'])->name('employee.profile');
+        Route::get('/employee/tasks', [EmployeeDashboardController::class, 'myTasks'])->name('employee.tasks');
     });//middleware('role:employee')
 
 });//middleware(['auth'])

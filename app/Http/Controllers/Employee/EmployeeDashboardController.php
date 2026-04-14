@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\Production;
 use Carbon\Carbon; //date & time library
 use App\Models\Employee;
 class EmployeeDashboardController extends Controller
 {
     //When user goes to /employee/dashboard, Laravel loads: employee/dashboard.blade.php
-   public function employeeDashboard()
+  public function employeeDashboard()
 {
     $employeeId = auth()->user()->employee_id;
 
@@ -49,11 +50,29 @@ class EmployeeDashboardController extends Controller
         }
     }
 
+    $totalTasks = Production::where('employee_id', $employeeId)->count();
+
+    $waitingTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'waiting')
+        ->count();
+
+    $inProductionTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'in_production')
+        ->count();
+
+    $completedTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'completed')
+        ->count();
+
     return view('employee.dashboard', compact(
         'todayStatus',
         'checkInTime',
         'checkOutTime',
-        'totalHours'
+        'totalHours',
+        'totalTasks',
+        'waitingTasks',
+        'inProductionTasks',
+        'completedTasks'
     ));
 }
     //prepares data for the check page
@@ -193,5 +212,52 @@ class EmployeeDashboardController extends Controller
     $employee = Employee::where('employee_id', $user->employee_id)->first();
 
     return view('employee.profile', compact('user', 'employee'));
+}
+
+public function myTasks(Request $request)
+{
+    $employeeId = auth()->user()->employee_id;
+
+    $query = Production::with(['order.product', 'machine', 'employee'])
+        ->where('employee_id', $employeeId);
+
+    // search by order id or product name
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('order_id', 'like', '%' . $search . '%')
+              ->orWhereHas('order.product', function ($productQuery) use ($search) {
+                  $productQuery->where('product_name', 'like', '%' . $search . '%');
+              });
+        });
+    }
+
+    // filter by status
+    if ($request->filled('status')) {
+        $query->where('production_status', $request->status);
+    }
+
+    $tasks = $query->orderBy('start_date', 'desc')->paginate(10);
+
+    // summary cards
+    $totalTasks = Production::where('employee_id', $employeeId)->count();
+    $waitingTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'waiting')
+        ->count();
+    $inProductionTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'in_production')
+        ->count();
+    $completedTasks = Production::where('employee_id', $employeeId)
+        ->where('production_status', 'completed')
+        ->count();
+
+    return view('employee.tasks', compact(
+        'tasks',
+        'totalTasks',
+        'waitingTasks',
+        'inProductionTasks',
+        'completedTasks'
+    ));
 }
 }

@@ -50,6 +50,7 @@
                                 <option value="">All Status</option>
                                 <option value="present" {{ request('status') == 'present' ? 'selected' : '' }}>Present</option>
                                 <option value="late" {{ request('status') == 'late' ? 'selected' : '' }}>Late</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="absent" {{ request('status') == 'absent' ? 'selected' : '' }}>Absent</option>
                             </select>
                         </div>
@@ -115,13 +116,17 @@
                                     </td>
 
                                     <td class="px-4 py-4">
-                                        @if($record->status === 'present')
-                                            <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                                Present
+                                        @if($record->check_in && $record->check_out)
+                                            <span class="inline-flex rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700">
+                                                Completed
                                             </span>
                                         @elseif($record->status === 'late')
                                             <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
                                                 Late
+                                            </span>
+                                        @elseif($record->status === 'present')
+                                            <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                                Present
                                             </span>
                                         @else
                                             <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">

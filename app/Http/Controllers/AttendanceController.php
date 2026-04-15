@@ -23,8 +23,23 @@ class AttendanceController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+    $status = $request->status;
+
+    if ($status === 'completed') {
+        $query->whereNotNull('check_in')
+              ->whereNotNull('check_out');
+    } elseif ($status === 'present') {
+        $query->where('status', 'present')
+              ->whereNotNull('check_in')
+              ->whereNull('check_out');
+    } elseif ($status === 'late') {
+        $query->where('status', 'late')
+              ->whereNotNull('check_in')
+              ->whereNull('check_out');
+    } else {
+        $query->where('status', $status);
+    }
+}
 
         if ($request->filled('attendance_date')) {
             $query->whereDate('attendance_date', $request->attendance_date);

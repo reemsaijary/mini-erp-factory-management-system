@@ -34,10 +34,10 @@ class Employee extends Model
     }
 
     // Employee attendance records
-    public function attendance()
-    {
-        return $this->hasMany(Attendance::class, 'employee_id');
-    }
+  public function attendances()
+{
+    return $this->hasMany(Attendance::class, 'employee_id', 'employee_id');
+}
 
     // Employee payroll records
     public function payrolls()

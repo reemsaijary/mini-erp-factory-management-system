@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
         //  PAYROLL 
-        Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+        Route::resource('payroll', PayrollController::class);
 
         //  EMPLOYEES 
         Route::resource('employees', EmployeeController::class);

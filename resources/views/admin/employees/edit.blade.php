@@ -83,15 +83,15 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
-                                <input type="password" name="password"
-                                       class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                <input type="password" name="password" autocomplete="new-password"
+       class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                                 <p class="text-xs text-gray-500 mt-1">Leave blank to keep current password.</p>
                             </div>
 
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
-                                <input type="password" name="password_confirmation"
-                                       class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                               <input type="password" name="password_confirmation" autocomplete="new-password"
+       class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
                         </div>
 

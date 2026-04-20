@@ -6,6 +6,7 @@
     <div class="py-8 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+            <!-- Top Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                     <p class="text-sm text-gray-500">Total Payroll Records</p>
@@ -15,24 +16,37 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                     <p class="text-sm text-gray-500">Active Filters</p>
                     <h3 class="text-lg font-semibold text-gray-800 mt-2">
-                        {{ request('search') || request('month') || request('year') || request('status') ? 'Applied' : 'None' }}
+                        {{ request('search') || request('month') || request('status') ? 'Applied' : 'None' }}
                     </h3>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                    <p class="text-sm text-gray-500">Payroll Module</p>
-                    <h3 class="text-lg font-semibold text-gray-800 mt-2">Admin View</h3>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Payroll Module</p>
+                        <h3 class="text-lg font-semibold text-gray-800 mt-2">Admin View</h3>
+                    </div>
                 </div>
             </div>
 
+            <!-- Payroll Table Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-5 border-b border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-800">Payroll Records</h3>
-                    <p class="text-sm text-gray-500">Review employee payroll information</p>
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Payroll Records</h3>
+                            <p class="text-sm text-gray-500">Review and manage employee salary records</p>
+                        </div>
+
+                        <a href="{{ route('payroll.create') }}"
+                           class="inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition">
+                            + New Payroll
+                        </a>
+                    </div>
                 </div>
 
+                <!-- Filters -->
                 <div class="px-6 py-5 border-b border-gray-100 bg-gray-50">
-                    <form method="GET" action="{{ route('payroll.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <form method="GET" action="{{ route('payroll.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1">Search Employee</label>
                             <input
@@ -53,17 +67,6 @@
                                 max="12"
                                 value="{{ request('month') }}"
                                 placeholder="1 - 12"
-                                class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                            >
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Year</label>
-                            <input
-                                type="number"
-                                name="year"
-                                value="{{ request('year') }}"
-                                placeholder="2026"
                                 class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             >
                         </div>
@@ -91,6 +94,7 @@
                     </form>
                 </div>
 
+                <!-- Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                         <thead class="bg-gray-100 text-gray-700">
@@ -98,13 +102,12 @@
                                 <th class="px-4 py-3 text-left font-semibold">ID</th>
                                 <th class="px-4 py-3 text-left font-semibold">Employee</th>
                                 <th class="px-4 py-3 text-left font-semibold">Month</th>
-                                <th class="px-4 py-3 text-left font-semibold">Year</th>
                                 <th class="px-4 py-3 text-left font-semibold">Basic Salary</th>
-                                <th class="px-4 py-3 text-left font-semibold">Overtime</th>
-                                <th class="px-4 py-3 text-left font-semibold">Deductions</th>
                                 <th class="px-4 py-3 text-left font-semibold">Bonus</th>
+                                <th class="px-4 py-3 text-left font-semibold">Deductions</th>
                                 <th class="px-4 py-3 text-left font-semibold">Net Salary</th>
                                 <th class="px-4 py-3 text-left font-semibold">Status</th>
+                                <th class="px-4 py-3 text-left font-semibold">Actions</th>
                             </tr>
                         </thead>
 
@@ -124,23 +127,15 @@
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
-                                        {{ $record->year }}
-                                    </td>
-
-                                    <td class="px-4 py-4 text-gray-700">
                                         ${{ number_format($record->basic_salary, 2) }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
-                                        ${{ number_format($record->overtime, 2) }}
+                                        ${{ number_format($record->bonus, 2) }}
                                     </td>
 
                                     <td class="px-4 py-4 text-gray-700">
                                         ${{ number_format($record->deductions, 2) }}
-                                    </td>
-
-                                    <td class="px-4 py-4 text-gray-700">
-                                        ${{ number_format($record->bonus, 2) }}
                                     </td>
 
                                     <td class="px-4 py-4 font-semibold text-gray-800">
@@ -158,10 +153,17 @@
                                             </span>
                                         @endif
                                     </td>
+
+                                    <td class="px-4 py-4">
+                                        <a href="{{ route('payroll.edit', $record->payroll_id) }}"
+                                           class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition">
+                                            Edit
+                                        </a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="px-4 py-8 text-center text-gray-500">
+                                    <td colspan="9" class="px-4 py-8 text-center text-gray-500">
                                         No payroll records found.
                                     </td>
                                 </tr>

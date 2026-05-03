@@ -17,19 +17,16 @@
 
 <body class="bg-gray-100">
 
-    @include('components.header')
+   @include('components.header')
 
-    <div class="flex min-h-screen">
-        @include('components.employee-sidebar')
+@include('components.employee-sidebar')
 
-        <div class="flex flex-col flex-1">
-            <main class="flex-1 p-6">
-                {{ $slot }}
-            </main>
+<main id="mainContent"
+      class="ml-64 min-h-screen pt-28 px-6 pb-8 transition-all duration-300 bg-gray-100">
+    {{ $slot }}
 
-            @include('components.employee-footer')
-        </div>
-    </div>
+    @include('components.employee-footer')
+</main>
 
     <!-- for collapse to work -->
     <script>
@@ -53,6 +50,8 @@
                     document.querySelectorAll('.label').forEach(el => {
                         el.classList.add('hidden');
                     });
+                    document.getElementById('mainContent').classList.remove('ml-64');
+                    document.getElementById('mainContent').classList.add('ml-20');
                 } else {
                     sidebar.classList.remove('w-20');
                     sidebar.classList.add('w-64');
@@ -63,6 +62,8 @@
                     document.querySelectorAll('.label').forEach(el => {
                         el.classList.remove('hidden');
                     });
+                    document.getElementById('mainContent').classList.remove('ml-20');
+                    document.getElementById('mainContent').classList.add('ml-64');
                 }
             });
         }

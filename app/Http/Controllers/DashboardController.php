@@ -21,8 +21,9 @@ class DashboardController extends Controller
     }
 //This function runs when user goes to /admin/dashboard
 
-       public function adminDashboard()
+      public function adminDashboard()
 {
+    // Summary totals
     $totalEmployees = \App\Models\Employee::count();
     $totalOrders = \App\Models\Order::count();
     $totalProducts = \App\Models\Product::count();
@@ -30,14 +31,40 @@ class DashboardController extends Controller
     $totalProduction = \App\Models\Production::count();
     $totalMaintenance = \App\Models\MachineMaintenance::count();
 
+    // Orders by status
+    $ordersNew = \App\Models\Order::where('order_status', 'new')->count();
+    $ordersPending = \App\Models\Order::where('order_status', 'pending')->count();
+    $ordersConfirmed = \App\Models\Order::where('order_status', 'confirmed')->count();
+
+    // Production by status
+    $productionWaiting = \App\Models\Production::where('production_status', 'waiting')->count();
+    $productionInProgress = \App\Models\Production::where('production_status', 'in_production')->count();
+    $productionCompleted = \App\Models\Production::where('production_status', 'completed')->count();
+
+    // Machines by status
+    $machinesWorking = \App\Models\Machine::where('machine_status', 'working')->count();
+    $machinesUnderMaintenance = \App\Models\Machine::where('machine_status', 'under_maintenance')->count();
+    $machinesInactive = \App\Models\Machine::where('machine_status', 'inactive')->count();
+
     return view('admin.dashboard', compact(
         'totalEmployees',
         'totalOrders',
         'totalProducts',
         'totalMachines',
         'totalProduction',
-        'totalMaintenance'
+        'totalMaintenance',
+
+        'ordersNew',
+        'ordersPending',
+        'ordersConfirmed',
+
+        'productionWaiting',
+        'productionInProgress',
+        'productionCompleted',
+
+        'machinesWorking',
+        'machinesUnderMaintenance',
+        'machinesInactive'
     ));
-}
-    
+}  
 }

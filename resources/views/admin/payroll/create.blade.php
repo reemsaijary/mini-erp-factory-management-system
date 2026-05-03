@@ -1,5 +1,9 @@
 <x-layouts.admin>
 
+<x-slot name="title">
+        Add Payroll
+    </x-slot>
+
     <div class="py-8">
         <div class="max-w-3xl mx-auto">
 

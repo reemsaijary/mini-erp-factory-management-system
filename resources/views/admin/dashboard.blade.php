@@ -1,7 +1,15 @@
 <x-layouts.admin>
-    @php
-        $pageTitle = 'Dashboard';
+    
+    {{-- Page Title --}}
 
+    <x-slot name="title">
+        Dashboard
+    </x-slot>
+    
+      {{-- Data Preparation --}}
+
+    @php
+       
         $summaryCards = [
             ['title' => 'Employees', 'count' => $totalEmployees, 'icon' => 'fa-users', 'bg' => 'bg-indigo-100', 'text' => 'text-indigo-600'],
             ['title' => 'Orders', 'count' => $totalOrders, 'icon' => 'fa-cart-shopping', 'bg' => 'bg-blue-100', 'text' => 'text-blue-600'],

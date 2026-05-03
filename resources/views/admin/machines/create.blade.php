@@ -1,8 +1,7 @@
 <x-layouts.admin>
-    @php
-        $pageTitle = 'Add Machine';
-    @endphp
-
+    <x-slot name="title">
+        Add Machine
+    </x-slot>
     <div class="py-8 bg-gray-50 min-h-screen">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

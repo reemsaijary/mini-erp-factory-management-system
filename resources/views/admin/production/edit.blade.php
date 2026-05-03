@@ -1,5 +1,9 @@
 <x-layouts.admin>
 
+<x-slot name="title">
+        Edit Production
+    </x-slot>
+
 <div class="py-8 bg-gray-50 min-h-screen">
 <div class="max-w-4xl mx-auto">
 

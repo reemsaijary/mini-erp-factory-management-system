@@ -1,4 +1,7 @@
 <x-layouts.admin>
+    <x-slot name="title">
+        Edit Employee
+    </x-slot>
     <x-slot name="header">
         <div>
             <h2 class="font-bold text-2xl text-gray-800 leading-tight">

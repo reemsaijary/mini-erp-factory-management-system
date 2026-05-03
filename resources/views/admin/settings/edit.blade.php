@@ -1,7 +1,7 @@
 <x-layouts.admin>
-    @php
-        $pageTitle = 'Settings';
-    @endphp
+    <x-slot name="title">
+        Settings
+    </x-slot>
 
     <div class="py-8 bg-gray-50 min-h-screen">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">

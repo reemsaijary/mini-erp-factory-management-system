@@ -18,17 +18,14 @@
     {{-- Top header --}}
     @include('components.header')
 
-    <div class="flex min-h-[calc(100vh-80px)]">
-        {{-- Sidebar --}}
-        @include('components.sidebar')
+@include('components.sidebar')
 
-        {{-- Main page content --}}
-        <main class="flex-1 p-6 md:p-8 transition-all duration-300 bg-[#eef4fb]">
-            {{ $slot }}
+<main id="mainContent"
+      class="ml-64 min-h-screen pt-28 px-6 pb-8 md:px-8 transition-all duration-300 bg-[#eef4fb]">
+    {{ $slot }}
 
-            @include('components.footer')
-        </main>
-    </div>
+    @include('components.footer')
+</main>
 
     <script>
         const toggleBtn = document.getElementById('sidebarToggle');
@@ -49,6 +46,8 @@
 
                 document.querySelectorAll('.label').forEach(el => {
                     el.classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('ml-64');
+                    document.getElementById('mainContent').classList.add('ml-20');
                 });
             } else {
                 sidebar.classList.remove('w-20');
@@ -59,6 +58,8 @@
 
                 document.querySelectorAll('.label').forEach(el => {
                     el.classList.remove('hidden');
+                    document.getElementById('mainContent').classList.remove('ml-20');
+                    document.getElementById('mainContent').classList.add('ml-64');
                 });
             }
         });

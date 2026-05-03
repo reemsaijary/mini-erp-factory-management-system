@@ -1,7 +1,5 @@
 <div id="sidebar"
-     class="w-64 bg-gradient-to-b from-blue-600 to-blue-700 text-white min-h-screen p-4 transition-all duration-300 overflow-hidden shadow-lg">
-
-
+     class="fixed top-20 left-0 z-40 w-64 h-[calc(100vh-80px)] bg-gradient-to-b from-blue-600 to-blue-700 text-white p-4 transition-all duration-300 overflow-y-auto shadow-lg">
  <div class="flex items-center justify-between mb-8 px-2">
 
     <!-- LEFT: Title -->

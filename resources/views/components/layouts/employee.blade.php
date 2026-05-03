@@ -22,10 +22,14 @@
 @include('components.employee-sidebar')
 
 <main id="mainContent"
-      class="ml-64 min-h-screen pt-28 px-6 pb-8 transition-all duration-300 bg-gray-100">
-    {{ $slot }}
+      class="ml-64 min-h-screen pt-28 px-6 transition-all duration-300 bg-gray-100 flex flex-col">
+
+    <div class="flex-1">
+        {{ $slot }}
+    </div>
 
     @include('components.employee-footer')
+
 </main>
 
     <!-- for collapse to work -->
